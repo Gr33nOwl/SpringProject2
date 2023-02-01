@@ -3,6 +3,8 @@ package com.github.gr33nowl.springproject2.services;
 import com.github.gr33nowl.springproject2.models.Book;
 import com.github.gr33nowl.springproject2.models.Person;
 import com.github.gr33nowl.springproject2.repositories.BooksRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +21,18 @@ public class BooksService {
         this.booksRepository = bookRepository;
     }
 
-    public List<Book> findAll() {
-        return booksRepository.findAll();
+    public List<Book> findAll(boolean sortByYear) {
+        if (sortByYear)
+            return booksRepository.findAll(Sort.by("year"));
+        else
+            return booksRepository.findAll();
+    }
+
+    public List<Book> findWithPagination(Integer page, Integer booksPerPage, boolean sortByYear) {
+        if (sortByYear)
+            return booksRepository.findAll(PageRequest.of(page, booksPerPage, Sort.by("year"))).getContent();
+        else
+            return booksRepository.findAll(PageRequest.of(page, booksPerPage)).getContent();
     }
 
     public Book findById(int id) {
@@ -65,5 +77,4 @@ public class BooksService {
         booksRepository.findById(id).ifPresent(book -> {
             book.setOwner(person);
         });
-    }
-}
+    } }
