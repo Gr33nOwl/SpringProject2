@@ -77,4 +77,9 @@ public class BooksService {
         booksRepository.findById(id).ifPresent(book -> {
             book.setOwner(person);
         });
-    } }
+    }
+
+    public List<Book> getBookByTitle(String title) {
+        return booksRepository.findBookByTitleContainingIgnoreCase(title);
+    }
+}

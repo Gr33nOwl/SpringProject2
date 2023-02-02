@@ -26,7 +26,7 @@ public class BooksController {
 
     @GetMapping
     public String index(@RequestParam(name = "page", required = false) Integer page,
-                        @RequestParam(name ="books_per_page", required = false) Integer booksPerPage,
+                        @RequestParam(name = "books_per_page", required = false) Integer booksPerPage,
                         @RequestParam(name = "sort_by_year", required = false) boolean sortByYear,
                         Model model) {
 
@@ -99,6 +99,17 @@ public class BooksController {
     public String assignBook(@PathVariable int id, @ModelAttribute Person person) {
         booksService.assignBook(id, person);
         return "redirect:/books/" + id;
+    }
+
+    @GetMapping("/search")
+    public String searchPage() {
+        return "/books/search";
+    }
+
+    @PostMapping("/search")
+    public String searchBook(Model model, @RequestParam("title") String title) {
+        model.addAttribute("books", booksService.getBookByTitle(title));
+        return "books/search";
     }
 
 }
